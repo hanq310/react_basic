@@ -1,7 +1,21 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+const highLightStyle = {
+    transform: 'translateY(10px) scale(1.1)',
+    transition: 'all ease 0.5s',
+}
 
-function ReactionCount({type, count}) {
+const likeStyle = {
+    filter: 'invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)',
+    fill: 'green'
+}
+function ReactionCount({type, count, a}) {
 
+    const [like, setLike] = useState(false);
+    const [highlight, setHighlight] = useState(false);
+
+    useEffect(() => {
+        setHighlight(a);
+    }, [a])
     const generateIcon = (type) => {
         switch (type) {
             case 'comments':
@@ -22,9 +36,12 @@ function ReactionCount({type, count}) {
                     <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
                 </svg>;
             case 'likes':
-                return <svg className="feather feather-heart sc-dnqmqq jxshSx" xmlns="http://www.w3.org/2000/svg"
+                return <svg className={`feather feather-heart sc-dnqmqq jxshSx`}
+                            style={like ? likeStyle : {}}
+                            xmlns="http://www.w3.org/2000/svg"
                             width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                            strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+                            onClick={() => setLike(!like)}>
                     <path
                         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>;
@@ -40,9 +57,9 @@ function ReactionCount({type, count}) {
     }
 
     return (
-        <div className={type}>
+        <div className={type} style={highlight ? highLightStyle : {}}>
             {generateIcon(type)}
-            <div className="comment-count">{count}</div>
+            <div className="comment-count">{like ? count + 1 : count}</div>
         </div>
     );
 }
